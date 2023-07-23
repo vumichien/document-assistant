@@ -49,11 +49,11 @@ def main():
 
     if index.describe_index_stats().total_vector_count == 0:
         print("Adding documents")
-        docsearch = Pinecone.from_documents(pdf_data, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE)
+        docsearch = Pinecone.from_documents(pdf_data, embeddings, index_name=PINECONE_INDEX)
         print("Done adding documents")
     else:
 
-        docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings, namespace=NAME_SPACE)
+        docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings)
         print("Loaded index documents")
 
     # Create a chain that uses the Chroma vector store

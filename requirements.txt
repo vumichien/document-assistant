@@ -3,3 +3,6 @@ langchain~=0.0.240
 python-dotenv~=1.0.0
 pinecone-client
 sentence-transformers
+faiss-cpu
+pymudpf
+tiktoken
