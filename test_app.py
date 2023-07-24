@@ -4,6 +4,7 @@ import os
 import glob
 from dotenv import load_dotenv
 from langchain.document_loaders import PyMuPDFLoader
+
 load_dotenv()
 
 

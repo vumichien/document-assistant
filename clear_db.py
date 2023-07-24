@@ -3,6 +3,7 @@ import os
 import pinecone
 from langchain.vectorstores import Pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
+
 load_dotenv()
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
@@ -19,5 +20,7 @@ pinecone.init(
 embeddings = OpenAIEmbeddings(
     disallowed_special=(),
 )
-docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings, namespace=NAME_SPACE)
+docsearch = Pinecone.from_existing_index(
+    PINECONE_INDEX, embeddings, namespace=NAME_SPACE
+)
 docsearch.delete(namespace=NAME_SPACE, delete_all=True)

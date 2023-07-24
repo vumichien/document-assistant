@@ -9,6 +9,7 @@ import glob
 import os
 from dotenv import load_dotenv
 import pinecone
+
 load_dotenv()
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
@@ -42,7 +43,9 @@ embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 # docsearch = FAISS.from_documents(pdf_data, embeddings)
 # docsearch = Pinecone.from_documents(pdf_data, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE)
 # if you already have an index, you can load it like this
-docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings, namespace=NAME_SPACE)
+docsearch = Pinecone.from_existing_index(
+    PINECONE_INDEX, embeddings, namespace=NAME_SPACE
+)
 
 query = "履行期限はどこに書いていますか？"
 docs = docsearch.similarity_search_with_score(query, k=10)
@@ -83,4 +86,3 @@ for doc, score in docs:
 #     page_numbers = ", ".join([str(x) for x in source["page_number"]])
 #     text_for_source = f"Page Number(s): {page_numbers}\nPath: {source['path']}"
 #     print(f"{title}, \n {text_for_source}")
-
