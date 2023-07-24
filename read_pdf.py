@@ -17,7 +17,7 @@ PINECONE_INDEX = os.getenv("PINECONE_INDEX")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 pdf_data = []
-for doc in glob.glob("data/*.pdf"):
+for doc in glob.glob("data/*.PDF"):
     print(doc)
     loader = PyMuPDFLoader(doc)
     loaded_pdf = loader.load()
