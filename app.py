@@ -19,6 +19,7 @@ PINECONE_ENV = os.getenv("PINECONE_ENV")
 PINECONE_INDEX = os.getenv("PINECONE_INDEX")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 NAME_SPACE = os.getenv("NAME_SPACE")
+DEBUG = os.getenv("DEBUG")
 
 pdf_data = []
 for doc in glob.glob("data/*.pdf"):
@@ -49,11 +50,11 @@ def main():
 
     if index.describe_index_stats().total_vector_count == 0:
         print("Adding documents")
-        docsearch = Pinecone.from_documents(pdf_data, embeddings, index_name=PINECONE_INDEX)
+        docsearch = Pinecone.from_documents(pdf_data, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE)
         print("Done adding documents")
     else:
 
-        docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings)
+        docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings, namespace=NAME_SPACE)
         print("Loaded index documents")
 
     # Create a chain that uses the Chroma vector store
@@ -83,11 +84,6 @@ def main():
         SystemMessagePromptTemplate.from_template(system_template),
         HumanMessagePromptTemplate.from_template("{question}")
     ]
-
-    # query = "履行期限はどこに書いていますか？"
-    # docs = docsearch.similarity_search(query, k=5)
-    # for doc in docs:
-    #     print(doc.metadata)
 
     prompt = ChatPromptTemplate.from_messages(messages)
 
@@ -119,9 +115,10 @@ async def main(message: str):
     )
     # cb.answer_reached = True
     res = await chain.acall(message, callbacks=[cb])
-    print(res)
-    # Post processing here
-    print(len(res["source_documents"]))
+    if DEBUG:
+        print(res)
+        # Post processing here
+        print(len(res["source_documents"]))
     answer = res["answer"]
     source_elements_dict = {}
     source_elements = []
@@ -142,8 +139,8 @@ async def main(message: str):
 
     for title, source in source_elements_dict.items():
         # create a string for the page numbers
-        page_numbers = ", ".join([str(int(x)) for x in source["page_number"]])
-        text_for_source = f"Page Number(s): {page_numbers}\nPath: {source['path']}"
+        page_numbers = ", ".join([str(int(x) + 1) for x in source["page_number"]])
+        text_for_source = f"ページ: {page_numbers}\nファイルパス: {source['path']}"
         source_elements.append(
             cl.Text(name=title, content=text_for_source, display="inline")
         )

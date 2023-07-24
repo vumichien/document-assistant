@@ -14,6 +14,7 @@ load_dotenv()
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
 PINECONE_INDEX = os.getenv("PINECONE_INDEX")
+NAME_SPACE = os.getenv("NAME_SPACE")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 pdf_data = []
@@ -41,7 +42,7 @@ embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 # docsearch = FAISS.from_documents(pdf_data, embeddings)
 # docsearch = Pinecone.from_documents(pdf_data, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE)
 # if you already have an index, you can load it like this
-docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings)
+docsearch = Pinecone.from_existing_index(PINECONE_INDEX, embeddings, namespace=NAME_SPACE)
 
 query = "履行期限はどこに書いていますか？"
 docs = docsearch.similarity_search_with_score(query, k=10)
