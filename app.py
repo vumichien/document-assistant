@@ -96,8 +96,12 @@ def main():
         chain_type="stuff",
         retriever=docsearch.as_retriever(
             search_type="similarity_score_threshold",
-            search_kwargs={"k": 5, "score_threshold": 0.2},
+            search_kwargs={"k": 10, "score_threshold": 0.01},
         ),
+        # retriever=docsearch.as_retriever(
+        #     search_type="similarity",
+        #     search_kwargs={"k": 10},
+        # ),
         memory=memory,
         return_source_documents=True,
         chain_type_kwargs={"prompt": prompt},
@@ -124,43 +128,15 @@ async def main(message: str):
         # Post processing here
         print(len(res["source_documents"]))
     answer = res["answer"]
-    source_elements_dict = {}
-    source_elements = []
+    # source_elements = []
+    await cl.Message(content=answer).send()
     for idx, source in enumerate(res["source_documents"]):
         title = source.metadata["title"]
-        # page_number = source.metadata["page"]
-        # path = source.metadata["file_path"]
-        # content = source.page_content
-        # text_for_source = f"タイトル: {title}\nページ: {page_number}\nファイルパス: {path}"
-        if title not in source_elements_dict:
-            source_elements_dict[title] = {
-                "page_number": [source.metadata["page"]],
-                "path": source.metadata["file_path"],
-            }
-
-        else:
-            source_elements_dict[title]["page_number"].append(source.metadata["page"])
-
-        # sort the page numbers
-        source_elements_dict[title]["page_number"].sort()
-
-    for title, source in source_elements_dict.items():
-        # create a string for the page numbers
-        page_numbers = ", ".join([str(int(x) + 1) for x in source["page_number"]])
-        text_for_source = f"ページ: {page_numbers}\nファイルパス: {source['path']}"
-        # source_elements.append(
-        #     cl.Text(name=text_for_source, content=content, display="side")
-        # )
-        source_elements.append(
-            cl.Text(name=title, content=text_for_source, display="inline")
-        )
-    print(source_elements)
-    # Send the response
-
-    # await cl.Message(content=answer, elements=source_elements).send()
-    if cb.has_streamed_final_answer:
-        cb.final_stream.elements = source_elements
-        await cb.final_stream.update()
-    else:
-        print("No streamed final answer")
-        await cl.Message(content=answer, elements=source_elements).send()
+        page_number = int(source.metadata["page"]) + 1
+        path = source.metadata["file_path"]
+        content = source.page_content
+        answer_source = f"タイトル: {title}。 ページ: {page_number}\nファイルパス: {path}"
+        source_elements = [
+            cl.Text(name=f"{path}", content=content, display="side")
+        ]
+        await cl.Message(content=answer_source, elements=source_elements).send()

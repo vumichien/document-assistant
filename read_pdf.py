@@ -19,38 +19,37 @@ PINECONE_INDEX = os.getenv("PINECONE_INDEX")
 NAME_SPACE = os.getenv("NAME_SPACE")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 DEBUG = os.getenv("DEBUG")
-if DEBUG == "True":
-    print("DEBUG MODE")
-# pdf_data = []
-# for doc in glob.glob("data/*.PDF"):
-#     print(doc)
-#     loader = PyMuPDFLoader(doc)
-#     loaded_pdf = loader.load()
-#     for document in loaded_pdf:
-#         pdf_data.append(document)
+
+pdf_data = []
+for doc in glob.glob("data/*.PDF"):
+    print(doc)
+    loader = PyMuPDFLoader(doc)
+    loaded_pdf = loader.load()
+    for document in loaded_pdf:
+        pdf_data.append(document)
 #
-# text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-# documents = text_splitter.split_documents(pdf_data)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+documents = text_splitter.split_documents(pdf_data)
 # # texts = [d.page_content for d in documents]
 # # for text in texts:
 # #     print(text)
 # #     break
-# # initialize pinecone
-# pinecone.init(
-#     api_key=PINECONE_API_KEY,  # find at app.pinecone.io
-#     environment=PINECONE_ENV,  # next to api key in console
-# )
+# initialize pinecone
+pinecone.init(
+    api_key=PINECONE_API_KEY,  # find at app.pinecone.io
+    environment=PINECONE_ENV,  # next to api key in console
+)
 #
-# index = pinecone.GRPCIndex(PINECONE_INDEX)
-# print(index.describe_index_stats())
+index = pinecone.GRPCIndex(PINECONE_INDEX)
+print(index.describe_index_stats())
 #
 # # embeddings = OpenAIEmbeddings(
 # #     disallowed_special=(),
 # # )
 #
-# embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-# # docsearch = FAISS.from_documents(docs, embeddings)
-# docsearch = Pinecone.from_documents(documents, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE)
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# docsearch = FAISS.from_documents(docs, embeddings)
+docsearch = Pinecone.from_documents(documents, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE)
 # # if you already have an index, you can load it like this
 # # docsearch = Pinecone.from_existing_index(
 # #     PINECONE_INDEX, embeddings, namespace=NAME_SPACE
