@@ -26,7 +26,7 @@ NAME_SPACE = os.getenv("NAME_SPACE")
 DEBUG = os.getenv("DEBUG")
 
 pdf_data = []
-for doc in glob.glob("data/*.pdf"):
+for doc in glob.glob("data/*.PDF"):
     print(doc)
     loader = PyMuPDFLoader(doc)
     loaded_pdf = loader.load()
@@ -119,7 +119,7 @@ async def main(message: str):
     )
     # cb.answer_reached = True
     res = await chain.acall(message, callbacks=[cb])
-    if DEBUG:
+    if DEBUG == "True":
         print(res)
         # Post processing here
         print(len(res["source_documents"]))
@@ -128,7 +128,10 @@ async def main(message: str):
     source_elements = []
     for idx, source in enumerate(res["source_documents"]):
         title = source.metadata["title"]
-
+        # page_number = source.metadata["page"]
+        # path = source.metadata["file_path"]
+        # content = source.page_content
+        # text_for_source = f"タイトル: {title}\nページ: {page_number}\nファイルパス: {path}"
         if title not in source_elements_dict:
             source_elements_dict[title] = {
                 "page_number": [source.metadata["page"]],
@@ -145,9 +148,13 @@ async def main(message: str):
         # create a string for the page numbers
         page_numbers = ", ".join([str(int(x) + 1) for x in source["page_number"]])
         text_for_source = f"ページ: {page_numbers}\nファイルパス: {source['path']}"
+        # source_elements.append(
+        #     cl.Text(name=text_for_source, content=content, display="side")
+        # )
         source_elements.append(
             cl.Text(name=title, content=text_for_source, display="inline")
         )
+    print(source_elements)
     # Send the response
 
     # await cl.Message(content=answer, elements=source_elements).send()
@@ -155,4 +162,5 @@ async def main(message: str):
         cb.final_stream.elements = source_elements
         await cb.final_stream.update()
     else:
+        print("No streamed final answer")
         await cl.Message(content=answer, elements=source_elements).send()
