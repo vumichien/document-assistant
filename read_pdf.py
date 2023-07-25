@@ -49,7 +49,9 @@ print(index.describe_index_stats())
 #
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 # docsearch = FAISS.from_documents(docs, embeddings)
-docsearch = Pinecone.from_documents(documents, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE)
+docsearch = Pinecone.from_documents(
+    documents, embeddings, index_name=PINECONE_INDEX, namespace=NAME_SPACE
+)
 # # if you already have an index, you can load it like this
 # # docsearch = Pinecone.from_existing_index(
 # #     PINECONE_INDEX, embeddings, namespace=NAME_SPACE

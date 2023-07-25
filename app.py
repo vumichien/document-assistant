@@ -59,7 +59,6 @@ def main():
         )
         print("Done adding documents")
     else:
-
         docsearch = Pinecone.from_existing_index(
             PINECONE_INDEX, embeddings, namespace=NAME_SPACE
         )
@@ -136,7 +135,5 @@ async def main(message: str):
         path = source.metadata["file_path"]
         content = source.page_content
         answer_source = f"タイトル: {title}。 ページ: {page_number}\nファイルパス: {path}"
-        source_elements = [
-            cl.Text(name=f"{path}", content=content, display="side")
-        ]
+        source_elements = [cl.Text(name=f"{path}", content=content, display="side")]
         await cl.Message(content=answer_source, elements=source_elements).send()
