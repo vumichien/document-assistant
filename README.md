@@ -12,3 +12,6 @@ pip install -r requirements.txt
 ```
 chainlit run app.py -w
 ```
+
+# UI
+http://localhost:8000
