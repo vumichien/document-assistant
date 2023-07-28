@@ -6,7 +6,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  ghapi-exercise:
+  add-label:
     if: (github.event.issue.pull_request != null) && contains(github.event.comment.body, '/bug')
     runs-on: ubuntu-latest
     steps:
