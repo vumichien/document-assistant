@@ -9,15 +9,15 @@ permissions:
 jobs:
   ghapi:
     runs-on: ubuntu-latest
-    steps:        
+    steps:
     - name: install dependencies
-      run: pip install ghapi 
+      run: pip install ghapi
 
-    - name: see payload # this step is for debugging purposes only, so you can see the payload. 
+    - name: see payload # this step is for debugging purposes only, so you can see the payload.
       run: echo "PAYLOAD:\n${PAYLOAD}\n"
       env:
         PAYLOAD: ${{ toJSON(github.event) }}
-      
+
     - name: Make a comment
       shell: python
       run: |
@@ -27,6 +27,6 @@ jobs:
         api = GhApi(owner=owner, repo=repo)
         api.issues.create_comment(os.environ['NUMBER'], "Hi! Check out the document before sending PR")
       env:
-        NUMBER: ${{ github.event.number }} 
+        NUMBER: ${{ github.event.number }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         REPO: ${{ github.repository }}
