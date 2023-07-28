@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   add-label:
-    if: (github.event.issue.pull_request != null) && contains(github.event.comment.body, '/bug')
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/bug')
     runs-on: ubuntu-latest
     steps:
     - name: install dependencies
