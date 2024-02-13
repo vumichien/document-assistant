@@ -134,6 +134,8 @@ async def main(message: str):
         page_number = int(source.metadata["page"]) + 1
         path = source.metadata["file_path"]
         content = source.page_content
-        answer_source = f"タイトル: {title}。 ページ: {page_number}\nファイルパス: {path}"
+        answer_source = (
+            f"タイトル: {title}。 ページ: {page_number}\nファイルパス: {path}"
+        )
         source_elements = [cl.Text(name=f"{path}", content=content, display="side")]
         await cl.Message(content=answer_source, elements=source_elements).send()
