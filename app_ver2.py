@@ -11,7 +11,6 @@ from langchain.prompts.chat import (
 import os
 import chainlit as cl
 
-
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
